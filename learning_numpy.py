@@ -9,7 +9,7 @@ dataset2=np.array([1,3,5,8])
 
 means_arr=np.array([np.mean(dataset1),dataset2.mean()])
 sem_arr=np.array([np.std(dataset1,ddof=1)/math.sqrt(len(dataset1)),dataset2.std(ddof=1)/math.sqrt(dataset2.size)])
-plt.bar(x=['dataset1','dataset2'],height=means_arr, yerr=sem_arr,capsize=4)
+plt.bar(x=['dataset1','dataset2'],height=means_arr, yerr=sem_arr,capsize=4) #yerr as standart dev adjusted when true variance is unkown
 plt.show()
 
 #class LinRegTwoVars:
