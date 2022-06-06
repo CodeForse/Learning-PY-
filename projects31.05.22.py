@@ -1,6 +1,10 @@
 ### learning python OOP 
 import random as rn 
 import numpy as np
+import sys, os
+print(os.listdir())
+os.chdir('C:\\*****\\dir')
+print(os.listdir())
 
 class Color:
     red=0
