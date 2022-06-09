@@ -29,7 +29,7 @@ class AnalyzeLinkTwoVars:
         #H1=HA: b!=0
         r=self.getRegressionCoef(x,y)
         t_test=r*math.sqrt((len(x)-2)/(1-r*r))
-        t_crit=st.t.ppf(q=SignLevel,df=len(x)-2)
+        t_crit=st.t.ppf(q=1-0.5*SignLevel,df=len(x)-2)
         return t_test<t_crit #0->accepth null, 1-> reject null
         #(solved)not working well as spicy stat is no available , df=n-2 and a=Sign level: damn it was scipy
 
