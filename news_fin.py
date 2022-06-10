@@ -6,6 +6,8 @@ first_page=1
 border_page=5
 sample_size=4
 
+file = open('news.txt', 'w')
+file.truncate()
 total_for_range = []
 for p in range(first_page,border_page):
      url=f"https://tengrinews.kz/kazakhstan_news/page/{p}"
@@ -19,3 +21,6 @@ for i in random.sample(total_for_range,sample_size):
   print(str(k)+') ')
   k=k+1
   print(i)
+  file.write(i+ '\n')
+
+file.close()
