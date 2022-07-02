@@ -1,15 +1,22 @@
-
+import os
+from pandas import array
+from typing import List
+import pydantic
 import schedule
 import telebot
 from threading import Thread
 from time import sleep, strptime
 from aiogram import types
+import json
 TOKEN = "5539956122:AAGVPjHYFI5-mN0OXuVmkNpO3wzruU-8uuU"
 
 bot = telebot.TeleBot(TOKEN)
 
 
-class remainder_everyday():
+class remainder_everyday(pydantic.BaseModel):
+    id_chat:int
+    remiand_text: str
+    activation_time: str
     
 
 @bot.message_handler(content_types='text')
@@ -18,7 +25,16 @@ def copypast(message:types.message):
     if(strptime(text_split[0],'%H:%M')): #setter of remainder in format time + text
         remaind_text=message.text.replace(text_split[0],'',1)
         if(remaind_text[0]==' '):  remaind_text=remaind_text[1:]
-
+        file=open('remainds.json','a+')
+        if(os.stat('remainds.json').st_size!=0):
+            # file.seek(file.tell()-1, os.SEEK_END)
+            # file.write('')
+            file.write(',')
+        # else: file.write('[')
+        file.write  (remainder_everyday(id_chat=message.chat.id,remiand_text= remaind_text,activation_time= text_split[0]).json())
+        # file.write(']')
+        file.close()
+    
     else: bot.send_message(message.chat.id,message.text)
     
 
@@ -37,11 +53,20 @@ def morning_mess():
 def sport_mess():
     return bot.send_message(687088043,'Займись спортом')
 def schedules():
+    # reminds_file=open('remainds.json','r')
+    if os.stat('remainds.json').st_size!=0:
+        strjson='['+open('remainds.json','r').read()+']'
+        
+        reminds=pydantic.parse_obj_as(List[remainder_everyday],json.loads(strjson))
+        for rem in reminds:
+            schedule.every().day.at(rem.activation_time).do(bot.send_message,rem.id_chat,rem.remiand_text)
+
     
     # schedule.every(5).seconds.do(function_to_run)
     # schedule.every(10).seconds.do(function_to_run2)
     schedule.every().day.at('07:00').do(morning_mess)
     schedule.every().day.at('14:00').do(sport_mess) 
+    
 if __name__ == "__main__":
     # Create the job in schedule.
     
