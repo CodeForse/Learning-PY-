@@ -1,19 +1,25 @@
+
 import schedule
 import telebot
 from threading import Thread
-from time import sleep
+from time import sleep, strptime
 from aiogram import types
 TOKEN = "5539956122:AAGVPjHYFI5-mN0OXuVmkNpO3wzruU-8uuU"
 
 bot = telebot.TeleBot(TOKEN)
 
 
-
-
+class remainder_everyday():
+    
 
 @bot.message_handler(content_types='text')
-def copypast(message):
-    bot.send_message(message.chat.id,message.text)
+def copypast(message:types.message):
+    text_split=str(message.text).split()
+    if(strptime(text_split[0],'%H:%M')): #setter of remainder in format time + text
+        remaind_text=message.text.replace(text_split[0],'',1)
+        if(remaind_text[0]==' '):  remaind_text=remaind_text[1:]
+
+    else: bot.send_message(message.chat.id,message.text)
     
 
 
@@ -31,11 +37,11 @@ def morning_mess():
 def sport_mess():
     return bot.send_message(687088043,'Займись спортом')
 def schedules():
-    print(1)
+    
     # schedule.every(5).seconds.do(function_to_run)
     # schedule.every(10).seconds.do(function_to_run2)
-    # schedule.every().day.at('07:00').do(morning_mess)
-    # schedule.every().day.at('14:00').do(sport_mess) 
+    schedule.every().day.at('07:00').do(morning_mess)
+    schedule.every().day.at('14:00').do(sport_mess) 
 if __name__ == "__main__":
     # Create the job in schedule.
     
