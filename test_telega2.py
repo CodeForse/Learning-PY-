@@ -6,7 +6,7 @@ from aiogram import types
 TOKEN = "5539956122:AAGVPjHYFI5-mN0OXuVmkNpO3wzruU-8uuU"
 
 bot = telebot.TeleBot(TOKEN)
-some_id = 12345 # This is our chat id.
+
 
 
 
@@ -31,10 +31,11 @@ def morning_mess():
 def sport_mess():
     return bot.send_message(687088043,'Займись спортом')
 def schedules():
+    print(1)
     # schedule.every(5).seconds.do(function_to_run)
     # schedule.every(10).seconds.do(function_to_run2)
-    schedule.every().day.at('07:00').do(morning_mess)
-    schedule.every().day.at('14:00').do(sport_mess) 
+    # schedule.every().day.at('07:00').do(morning_mess)
+    # schedule.every().day.at('14:00').do(sport_mess) 
 if __name__ == "__main__":
     # Create the job in schedule.
     
