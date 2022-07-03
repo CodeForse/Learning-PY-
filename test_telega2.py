@@ -55,10 +55,13 @@ def sport_mess():
 def schedules():
     # reminds_file=open('remainds.json','r')
     if os.stat('remainds.json').st_size!=0:
-        strjson='['+open('remainds.json','r').read()+']'
-        
+        file=open('remainds.json','r')
+        strjson='['+file.read()+']'
+        file.close()
         reminds=pydantic.parse_obj_as(List[remainder_everyday],json.loads(strjson))
+        schedule.every().day.at('23:27').do(bot.send_message,rem.id_chat,'дешевка')
         for rem in reminds:
+            
             schedule.every().day.at(rem.activation_time).do(bot.send_message,rem.id_chat,rem.remiand_text)
 
     
