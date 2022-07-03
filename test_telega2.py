@@ -19,22 +19,30 @@ class remainder_everyday(pydantic.BaseModel):
     activation_time: str
     
 
+def isTimeFormat(input):
+    try:
+        strptime(input, '%H:%M')
+        return True
+    except ValueError:
+        return False
+
 @bot.message_handler(content_types='text')
 def copypast(message:types.message):
     text_split=str(message.text).split()
-    if(strptime(text_split[0],'%H:%M')): #setter of remainder in format time + text
+    if(isTimeFormat(text_split[0])): #setter of remainder in format time + text
         remaind_text=message.text.replace(text_split[0],'',1)
-        if(remaind_text[0]==' '):  remaind_text=remaind_text[1:]
-        file=open('remainds.json','a+')
-        if(os.stat('remainds.json').st_size!=0):
-            # file.seek(file.tell()-1, os.SEEK_END)
-            # file.write('')
-            file.write(',')
-        # else: file.write('[')
-        file.write  (remainder_everyday(id_chat=message.chat.id,remiand_text= remaind_text,activation_time= text_split[0]).json())
-        # file.write(']')
-        file.close()
-    
+        try:
+            if(remaind_text[0]==' '):  remaind_text=remaind_text[1:]
+            file=open('remainds.json','a+')
+            if(os.stat('remainds.json').st_size!=0):
+                # file.seek(file.tell()-1, os.SEEK_END)
+                # file.write('')
+                file.write(',')
+            # else: file.write('[')
+            file.write  (remainder_everyday(id_chat=message.chat.id,remiand_text= remaind_text,activation_time= text_split[0]).json())
+            # file.write(']')
+            file.close()
+        except: bot.send_message(message.chat.id,'Notification itself is not defined, Try again')
     else: bot.send_message(message.chat.id,message.text)
     
 
@@ -59,7 +67,7 @@ def schedules():
         strjson='['+file.read()+']'
         file.close()
         reminds=pydantic.parse_obj_as(List[remainder_everyday],json.loads(strjson))
-        schedule.every().day.at('23:27').do(bot.send_message,rem.id_chat,'дешевка')
+        # schedule.every().day.at('23:27').do(bot.send_message,rem.id_chat,'дешевка')
         for rem in reminds:
             
             schedule.every().day.at(rem.activation_time).do(bot.send_message,rem.id_chat,rem.remiand_text)
